@@ -8,9 +8,12 @@
 import Foundation
 import Combine
 
+protocol WeatherData {
+    func getData(city: String, stateCode: String?, countryCode: String?, whichApiCalled: WhichApiCalled) async
+}
 /// `WeatherViewModel` is responsible for managing weather data fetched from an API and providing that data to the view.
 /// It handles the business logic, processes API responses, and updates the view accordingly.
-class WeatherViewModel: ObservableObject {
+class WeatherViewModel: ObservableObject, WeatherData {
     /// A set of AnyCancellable to hold Combine's cancellable objects, ensuring the Combine subscriptions are properly managed.
     private var cancellables = Set<AnyCancellable>()
     
@@ -66,7 +69,7 @@ class WeatherViewModel: ObservableObject {
     ///   - stateCode: The state code (optional).
     ///   - countryCode: The country code (optional).
     ///   - whichApiCalled: Specifies which API to call (e.g., city-only, city and country, or city, state, and country).
-    func getData(city: String, stateCode: String? = nil, countryCode: String? = nil, whichApiCalled: WhichApiCalled) async {
+    func getData(city: String, stateCode: String?, countryCode: String?, whichApiCalled: WhichApiCalled) async {
         var tempUrl: URL?
         
         /// Determines which API URL to use based on the provided parameters.
